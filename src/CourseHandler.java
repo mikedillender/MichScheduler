@@ -117,7 +117,7 @@ public class CourseHandler {
         for (Course c: rendering) {
             if (ly) {
                 //c.update(t, courses, ups, repel);
-                //c.updateCirc(t, courses, ups,lvls, repel);
+                c.updateCirc(t, courses, ups,lvls, repel);
             }else {
                 c.updateFree(t,courses,rendering,ups,repel);
             }

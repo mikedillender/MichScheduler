@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 public class Main extends Applet implements Runnable, KeyListener {
 
     //BASIC VARIABLES
-    private final int WIDTH=1280, HEIGHT=900;
+    private final int WIDTH=1800, HEIGHT=900;
 
     //GRAPHICS OBJECTS
     private Thread thread;
@@ -18,7 +18,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     Color gridColor=new Color(150, 150,150);
 
     boolean repel=false;
-    boolean locky=false;
+    boolean locky=true;
     CourseHandler ch;
     float speed=.02f;
     boolean updating=false;

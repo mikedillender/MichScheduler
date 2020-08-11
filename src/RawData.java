@@ -87,7 +87,7 @@ public class RawData {
             "Principles of engineering design for electrical engineering systems. Integration of electrical engineering foundational concepts to address system-level objectives. Semester-long, open-ended design based on a societally-relevant challenge. Technical topics include embedded systems fundamentals, sensing, power and energy tradeoffs, and addressing realistic constraints of project requirements. CourseProfile (ATLAS)\n" +
             "\n" +
             "EECS 301. Probabilistic Methods in Engineering\n" +
-            "Advised prerequisite: preceded or accompanied by EECS 216. (4 credits)\n" +
+            "Prerequisite: EECS 215. (4 credits)\n" +/*TODO : THIS IS FALSE*/
             " Instruction Mode: In-Person – Synchronous, Online – Synchronous\n" +
             "Basic concepts of probability theory. Random variables: discrete, continuous and conditional probability distributions; averages; independence. Statistical inference: hypothesis testing and estimation. Introduction to discrete and continuous random processes. CourseProfile (ATLAS)\n" +
             "\n" +

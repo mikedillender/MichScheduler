@@ -20,6 +20,9 @@ public class Course {
     int[] reqby;
     int[] req;
 
+    public int numlinked;
+    Vec2f cen;
+
     Vec2f p;
     Vec2f v;
     public Color c;
@@ -64,18 +67,25 @@ public class Course {
         }*/
         //System.out.println("statements = "+reqstt.size());  // EECS
     }
-
+    float minOr=(float)(0);
+    float maxOr=(float)(Math.PI*2);
     public void setInitPos(int w,int h,int i,int numinlayer){
+
+        wid=w;
+        hei=h;
         code=Integer.parseInt(name.substring(5));
+        cen=new Vec2f(wid/2f,hei/2f);
         c=new Color(Integer.parseInt(name.substring(5,6))*28,Integer.parseInt(name.substring(6,7))*28,Integer.parseInt(name.substring(7,8))*28);
         //p=new Vec2f((code-((code/100)*100)+10)/120f*w,(maxUpLine+1f)*h/9f);
         //or=(code-((code/100)*100)+10)/100f*6.28f;
-        or=(i/(float)numinlayer)*6.28f;
+        or=((i+1f)/((float)numinlayer+2))*3.14f*2;
+        if (code==281){or=(float)(Math.PI*7.5/8f)*2;}
+        if (code==215){or=(float)(Math.PI*1.5f/4f)*2;}
+        if (code==330){or=(float)(Math.PI*1/6.5f)*2/2;}
+        if (code==501){or=(float)(Math.PI*1/2f)*2/2;}
         //r=((lvl)*h/9f)/2f;
-        r=((maxUpLine+1f)*h/9f)/2f;
-        wid=w;
-        hei=h;
-        p=new Vec2f((float)Math.cos(or)*r+(wid/2),(float)Math.sin(or)*r+(hei/2));
+        r=(float)(((maxUpLine+.8f)*h/8f))/2f;
+        p=new Vec2f((float)Math.cos(or)*r+(cen.x),(float)Math.sin(or)*r+(cen.y));
         v=new Vec2f(0,0);
     }
 
@@ -87,40 +97,50 @@ public class Course {
     }
 
     public void updateCirc(float dt,ArrayList<Course> cs,ArrayList<Integer>[] ups,ArrayList<Integer>[] lvls, boolean repel){
+        if (code==281||code==215||code==330){return;}
         float vdx=0;
         for (int i:reqby){
-            float dor=getOrDif(or,cs.get(i).or);
+            float dor=getOrDif(or,cs.get(i).or,false);
             vdx+=((Math.abs(dor)>50f/(6*r))?1:-1)*(6.28*r*dor)*.1f/(Math.abs(r-cs.get(i).r)+r/lvl);
         }
         for (int i:req){
-            float dor=getOrDif(or,cs.get(i).or);
+            float dor=getOrDif(or,cs.get(i).or,false);
             vdx+=((Math.abs(dor)>50f/(6*r))?1:-1)*(6.28*r*dor)*.1f/(Math.abs(r-cs.get(i).r)+r/lvl);
         }
         if (repel) {
             for (int i : ups[maxUpLine]) {
             //for (int i : lvls[lvl]) {
-                float dor=getOrDif(or,cs.get(i).or);
+                float dor=getOrDif(or,cs.get(i).or,true);
                 if (i == index) {
                     continue;
                 }
-                vdx +=(dor>0?-1:1)*(400f) / (float) Math.pow(Math.abs(dor*6.28*r) + 1f, 1.5);
+                vdx +=(dor>0?-1:1)*(500f) / (float) Math.pow(Math.abs(dor*6.28*r) + 1f, 1.5);
             }
         }
         v.x+=vdx*dt;
-        if (v.x>3.14/10){v.x=.31415f;}
+        if (v.x>3.14/40){v.x=3.14f/40f;}
+        if (v.x<-3.14/40){v.x=-3.14f/40f;}
+
         //v.x=vdx;
         v.x*=.95f;
         or=or+(v.x*dt);
-        p.x=(float)Math.cos(or)*r+(wid/2);
-        p.y=(float)Math.sin(or)*r+(hei/2);
+        //float or1=or+(v.x*dt);
+        //if (or1>minOr&&or1<maxOr){or=or1;v.x=0;v.y=0;}
+        float cr=r*(float)( (2/(Math.sqrt(Math.pow(Math.cos(or),2)+Math.pow(2*Math.sin(or),2))))  );
+        p.x=(float)Math.cos(or)*cr+(cen.x);
+        p.y=(float)Math.sin(or)*cr+(cen.y);
 
     }
 
-    private float getOrDif(float firstAngle,float secondAngle){
+    private float getOrDif(float firstAngle,float secondAngle,boolean ar) {
+        if (ar) {
         double difference = secondAngle - firstAngle;
         while (difference < -3.1415) difference += 6.283;
         while (difference > 3.1415) difference -= 6.283;
         return (float)difference;
+        } else {
+            return secondAngle - firstAngle;
+        }
     }
 
     public void update(float dt,ArrayList<Course> cs,ArrayList<Integer>[] ups, boolean repel){
@@ -149,24 +169,38 @@ public class Course {
 
     public void updateFree(float dt,ArrayList<Course> cs,ArrayList<Course> render,ArrayList<Integer>[] ups, boolean repel){
         Vec2f a=new Vec2f();
+        Vec2f cen=new Vec2f(wid/2f,hei/10f);
+        float cd=cen.distance(p);
+        float cdx=p.x-cen.x;
+        float cdy=p.y-cen.y;
+        float cp1x=cen.x+((cdx*2*r)/cd);
+        float cp1y=cen.y+((cdy*2*r)/cd);
+        a.x+=(.03f)*(cp1x-p.x);
+        a.y+=(.03f)*(cp1y-p.y);
+
+
         for (int i:reqby){
             float d=cs.get(i).p.distance(p);
             float dx=p.x-cs.get(i).p.x;
             float dy=p.y-cs.get(i).p.y;
-            float p1x=cs.get(i).p.x+((dx*120)/d);
-            float p1y=cs.get(i).p.y+((dy*120)/d);
-            a.x+=(.01f)*(p1x-p.x);
-            a.y+=(.01f)*(p1y-p.y);
+            int tlinked=numlinked+cs.get(i).numlinked;
+            float linkrad=120+(5*(tlinked));
+            float p1x=cs.get(i).p.x+((dx*linkrad)/d);
+            float p1y=cs.get(i).p.y+((dy*linkrad)/d);
+            a.x+=(.04f/tlinked)*(p1x-p.x);
+            a.y+=(.04f/tlinked)*(p1y-p.y);
             //50^2=x^
         }
         for (int i:req){
             float d=cs.get(i).p.distance(p);
             float dx=p.x-cs.get(i).p.x;
             float dy=p.y-cs.get(i).p.y;
-            float p1x=cs.get(i).p.x+((dx*120)/d);
-            float p1y=cs.get(i).p.y+((dy*120)/d);
-            a.x+=(.01f)*(p1x-p.x);
-            a.y+=(.01f)*(p1y-p.y);
+            int tlinked=numlinked+cs.get(i).numlinked;
+            float linkrad=120+(5*(tlinked));
+            float p1x=cs.get(i).p.x+((dx*linkrad)/d);
+            float p1y=cs.get(i).p.y+((dy*linkrad)/d);
+            a.x+=(.04f/tlinked)*(p1x-p.x);
+            a.y+=(.04f/tlinked)*(p1y-p.y);
         }
         if (repel) {
             for (Course c: render){
@@ -237,6 +271,7 @@ public class Course {
                 j++;
             }
         }
+        numlinked=reqby.length+req.length;
 
     }
 }
