@@ -71,8 +71,8 @@ public class Course {
         //p=new Vec2f((code-((code/100)*100)+10)/120f*w,(maxUpLine+1f)*h/9f);
         //or=(code-((code/100)*100)+10)/100f*6.28f;
         or=(i/(float)numinlayer)*6.28f;
-        r=((lvl)*h/9f)/2f;
-        //r=((maxUpLine+1f)*h/9f)/2f;
+        //r=((lvl)*h/9f)/2f;
+        r=((maxUpLine+1f)*h/9f)/2f;
         wid=w;
         hei=h;
         p=new Vec2f((float)Math.cos(or)*r+(wid/2),(float)Math.sin(or)*r+(hei/2));
@@ -97,8 +97,8 @@ public class Course {
             vdx+=((Math.abs(dor)>50f/(6*r))?1:-1)*(6.28*r*dor)*.1f/(Math.abs(r-cs.get(i).r)+r/lvl);
         }
         if (repel) {
-            //for (int i : ups[maxUpLine]) {
-            for (int i : lvls[lvl]) {
+            for (int i : ups[maxUpLine]) {
+            //for (int i : lvls[lvl]) {
                 float dor=getOrDif(or,cs.get(i).or);
                 if (i == index) {
                     continue;
@@ -147,24 +147,33 @@ public class Course {
         }
     }
 
-    public void updateFree(float dt,ArrayList<Course> cs,ArrayList<Integer>[] ups, boolean repel){
+    public void updateFree(float dt,ArrayList<Course> cs,ArrayList<Course> render,ArrayList<Integer>[] ups, boolean repel){
         Vec2f a=new Vec2f();
         for (int i:reqby){
-            float d=cs.get(i).p.distance(p)-30;
-            a.x+=((d>50)?1:-1)*((cs.get(i).p.x>p.x)?1:-1)*(.03)*(d);
-            a.y+=((d>50)?1:-1)*((cs.get(i).p.y>p.y)?1:-1)*(.03)*(d);
+            float d=cs.get(i).p.distance(p);
+            float dx=p.x-cs.get(i).p.x;
+            float dy=p.y-cs.get(i).p.y;
+            float p1x=cs.get(i).p.x+((dx*120)/d);
+            float p1y=cs.get(i).p.y+((dy*120)/d);
+            a.x+=(.01f)*(p1x-p.x);
+            a.y+=(.01f)*(p1y-p.y);
+            //50^2=x^
         }
         for (int i:req){
-            float d=cs.get(i).p.distance(p)-30;
-            a.x+=((d>50)?1:-1)*((cs.get(i).p.x>p.x)?1:-1)*(.03)*(d);
-            a.y+=((d>50)?1:-1)*((cs.get(i).p.y>p.y)?1:-1)*(.03)*(d);
+            float d=cs.get(i).p.distance(p);
+            float dx=p.x-cs.get(i).p.x;
+            float dy=p.y-cs.get(i).p.y;
+            float p1x=cs.get(i).p.x+((dx*120)/d);
+            float p1y=cs.get(i).p.y+((dy*120)/d);
+            a.x+=(.01f)*(p1x-p.x);
+            a.y+=(.01f)*(p1y-p.y);
         }
         if (repel) {
-            for (Course c: cs){
+            for (Course c: render){
                 if (c.index==index){continue;}
                 float d=c.p.distance(p);
-                a.x+=((c.p.x>p.x)?-1:1)*(.5f)/(d*d+1);
-                a.y+=((c.p.y>p.y)?-1:1)*(.5f)/(d*d+1);
+                a.x+=((c.p.x>p.x)?-1:1)*(40f)/(d*d+20);
+                a.y+=((c.p.y>p.y)?-1:1)*(40f)/(d*d+20);
             }
         }
         v.x+=dt*a.x;

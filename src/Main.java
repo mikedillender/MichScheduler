@@ -18,7 +18,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     Color gridColor=new Color(150, 150,150);
 
     boolean repel=false;
-    boolean locky=true;
+    boolean locky=false;
     CourseHandler ch;
     float speed=.02f;
     boolean updating=false;
