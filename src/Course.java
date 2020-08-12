@@ -28,6 +28,17 @@ public class Course {
     public Color c;
     int code;
     public float r;
+    String eeCore="200 215 216 230 280 300 301";
+    String[] types= {"200 215 216 230 280 300 301",
+            "417 458", //BE
+            "311 312 320 413 414 421 423 425 427 428 429",//CSS
+            "351 442 444 452 453 455 460 461 464",//Comm & Controls
+            "270 370 373 376 445 470 473 475 477 478",
+            "330 334 411 430 434 438", // E&M
+            "418 419 463"// Power
+             };
+    Color[] colors= {Color.WHITE,new Color(224, 51, 53),Color.GREEN,Color.YELLOW,new Color(82, 92, 170),
+            new Color(233,126,217),new Color(45, 47, 80)};
 
     public float or;
 
@@ -94,6 +105,17 @@ public class Course {
         g.fillOval((int)p.x-5,(int)p.y-5,10,10);
         g.setColor(Color.BLACK);
         g.drawString(code+"",(int)p.x-5,(int)p.y-5);
+        int num=0;
+        for (int i=0; i<types.length; i++){
+            if (types[i].contains(""+code)){
+                if (num==0){
+                    g.setColor(Color.WHITE);
+                    g.fillOval((int)p.x-4,(int)p.y-4,8,8);
+                }
+                g.setColor(colors[i]);
+                g.fillOval((int)p.x-3+num,(int)p.y-3+num,6-(num*2),6-(num*2));
+            }
+        }
     }
 
     public void updateCirc(float dt,ArrayList<Course> cs,ArrayList<Integer>[] ups,ArrayList<Integer>[] lvls, boolean repel){

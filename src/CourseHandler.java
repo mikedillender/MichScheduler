@@ -63,16 +63,6 @@ public class CourseHandler {
             downs[i]=new ArrayList<>();
             ups[i]=new ArrayList<>();
         }
-
-        for (int i=0; i<10; i++){
-            System.out.println("");
-            System.out.print(i+" - ");
-            for (int k:ups[i]){
-                System.out.print(courses.get(k).name+", ");
-            }
-
-
-        }
         rendering=new ArrayList<>();
 
         for (Course c: courses){
@@ -129,9 +119,9 @@ public class CourseHandler {
         if (x>courses.get(in).maxUpLine){courses.get(in).maxUpLine=x;}
         System.out.println();
         for (int i=0; i<x;i++){
-            System.out.print("   ");
+            System.out.print("\t");
         }
-        if (x!=0){ System.out.print("- "); }
+        if (x!=0){ System.out.print(""); }
         System.out.print(courses.get(in).lines[0]);
         for (Course c:reqby[in]){
             int d1=listreqby(courses.indexOf(c),x+1);
