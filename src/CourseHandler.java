@@ -86,7 +86,7 @@ public class CourseHandler {
             }
 
         }
-
+        addPigments();
 
             //System.out.println("no prereqs = "+noreq.size());
     }
@@ -100,6 +100,54 @@ public class CourseHandler {
         }
         for (Course c: rendering){
             c.render(g);
+        }
+    }
+
+
+    public void addPigments(){
+        spreadFrom(getCofCode(430),230,20,215,1,new ArrayList<Course>());
+        spreadFrom(getCofCode(281),150,150,245,1,new ArrayList<Course>());
+        spreadFrom(getCofCode(270),230,80,60,1,new ArrayList<Course>());
+        spreadFrom(getCofCode(301),200,200,15,1,new ArrayList<Course>());
+        spreadFrom(getCofCode(311),40,230,45,1,new ArrayList<Course>());
+        spreadFrom(getCofCode(216),40,230,45,2,new ArrayList<Course>());
+        for (Course c:courses){
+            if (c.pigments.size()>1){
+                float[] col=new float[]{0,0,0,0};
+                for (int[] p:c.pigments){
+                    for (int i=0;i<3;i++){
+                        col[i]+=((float)p[i])/(float)Math.pow(p[3],2);
+                    }
+                    col[3]+=(1f/(float)Math.pow(p[3],2));
+
+                }
+                for (int i=0;i<3;i++) { col[i]/=col[3];}
+                c.c=new Color((int)col[0],(int)col[1],(int)col[2]);
+            }
+        }
+    }
+
+    public Course getCofCode(int code){
+        for (Course c:courses){
+            if (c.code==code){
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public void spreadFrom(Course c, int r, int g, int b, int i, ArrayList<Course> prev){
+        if (c==null){return;}
+        int[] pigs=new int[]{r,g,b,i};
+        c.pigments.add(pigs);
+        prev.add(c);
+        ArrayList<Integer> connected=new ArrayList<>();
+        for (int in:c.reqby){connected.add(in);}
+        for (int in:c.req){connected.add(in);}
+        for (int cin:connected){
+            if (prev.contains(courses.get(cin))){continue;}
+            spreadFrom(courses.get(cin),r,g,b,i+1,prev);
+            System.out.println("Spread from "+c.name+" to "+courses.get(cin).name);
         }
     }
 

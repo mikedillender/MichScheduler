@@ -12,6 +12,8 @@ public class Course {
     public int index;
     public String prs;
 
+    ArrayList<int[]> pigments;
+
     public int maxUpLine=0;
     public int maxDownLine=0;
     int wid;
@@ -72,6 +74,7 @@ public class Course {
                 i--;
             }
         }
+        pigments=new ArrayList<>();
         parseStatements(reqstt);
         /*for (String s:reqstt){
             System.out.println(s);
@@ -91,7 +94,9 @@ public class Course {
         //or=(code-((code/100)*100)+10)/100f*6.28f;
         or=((i+1f)/((float)numinlayer+2))*3.14f*2;
         if (code==281){or=(float)(Math.PI*7.5/8f)*2;}
+        if (code==270){or=(float)(Math.PI*4/8f)*2;}
         if (code==215){or=(float)(Math.PI*1.5f/4f)*2;}
+        if (code==216){or=(float)(Math.PI*3.8/8f)*2;}
         if (code==330){or=(float)(Math.PI*1/6.5f)*2/2;}
         if (code==501){or=(float)(Math.PI*1/2f)*2/2;}
         //r=((lvl)*h/9f)/2f;
@@ -108,18 +113,18 @@ public class Course {
         int num=0;
         for (int i=0; i<types.length; i++){
             if (types[i].contains(""+code)){
-                if (num==0){
+                /*if (num==0){
                     g.setColor(Color.WHITE);
                     g.fillOval((int)p.x-4,(int)p.y-4,8,8);
-                }
-                g.setColor(colors[i]);
-                g.fillOval((int)p.x-3+num,(int)p.y-3+num,6-(num*2),6-(num*2));
+                }*/
+                //g.setColor(colors[i]);
+                //g.fillOval((int)p.x-3+num,(int)p.y-3+num,6-(num*2),6-(num*2));
             }
         }
     }
 
     public void updateCirc(float dt,ArrayList<Course> cs,ArrayList<Integer>[] ups,ArrayList<Integer>[] lvls, boolean repel){
-        if (code==281||code==215||code==330){return;}
+        if (code==281||code==215||code==330||code==270||code==501||code==216){return;}
         float vdx=0;
         for (int i:reqby){
             float dor=getOrDif(or,cs.get(i).or,false);
