@@ -108,6 +108,7 @@ public class CourseHandler {
         spreadFrom(getCofCode(430),230,20,215,1,new ArrayList<Course>());
         spreadFrom(getCofCode(281),150,150,245,1,new ArrayList<Course>());
         spreadFrom(getCofCode(270),230,80,60,1,new ArrayList<Course>());
+        spreadFrom(getCofCode(691),230,80,60,2,new ArrayList<Course>());
         spreadFrom(getCofCode(301),200,200,15,1,new ArrayList<Course>());
         spreadFrom(getCofCode(311),40,230,45,1,new ArrayList<Course>());
         spreadFrom(getCofCode(216),40,230,45,2,new ArrayList<Course>());
@@ -147,7 +148,7 @@ public class CourseHandler {
         for (int cin:connected){
             if (prev.contains(courses.get(cin))){continue;}
             spreadFrom(courses.get(cin),r,g,b,i+1,prev);
-            System.out.println("Spread from "+c.name+" to "+courses.get(cin).name);
+            //System.out.println("Spread from "+c.name+" to "+courses.get(cin).name);
         }
     }
 
