@@ -1,7 +1,12 @@
+import javax.imageio.ImageIO;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main extends Applet implements Runnable, KeyListener {
@@ -84,8 +89,34 @@ public class Main extends Applet implements Runnable, KeyListener {
             locky=!locky;
         } if (e.getKeyCode() == KeyEvent.VK_R) {
             repel=!repel;
+        }if (e.getKeyCode() == KeyEvent.VK_P) {
+            exportImg();
         }
     }
     public void keyTyped(KeyEvent e) { }
+
+
+    public void exportImg(){
+        String export="C:\\Users\\Mike\\Documents\\GitHub\\MichScheduler\\img.png";
+
+        RenderedImage rendImage = toBufferedImage(img);
+        File file = new File(export);
+        try {
+            ImageIO.write(rendImage, "png", file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.exit(0);
+
+    }
+
+    public BufferedImage toBufferedImage(Image img) {
+        if (img instanceof BufferedImage) { return (BufferedImage) img; }
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+        return bimage;
+    }
 
 }
