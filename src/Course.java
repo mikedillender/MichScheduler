@@ -3,7 +3,7 @@ import com.sun.javafx.geom.Vec2f;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Course {
+public class Course implements Constants {
     public String cs;
     public int lvl;
     public String[] lines;
@@ -65,6 +65,7 @@ public class Course {
         //System.out.println(lines[0] + " | "+lines[1]);
 
         name=lines[0].substring(0,8);
+        code=Integer.parseInt(name.substring(5));
         credits=lines[1].substring(lines[1].lastIndexOf("("));
         lines[1]=lines[1].substring(0,lines[1].lastIndexOf("("));
         ArrayList<String> reqstt=getStatements(lines[1]);
@@ -87,7 +88,6 @@ public class Course {
 
         wid=w;
         hei=h;
-        code=Integer.parseInt(name.substring(5));
         cen=new Vec2f(wid/2f,hei/2f);
         c=new Color(Integer.parseInt(name.substring(5,6))*28,Integer.parseInt(name.substring(6,7))*28,Integer.parseInt(name.substring(7,8))*28);
         //p=new Vec2f((code-((code/100)*100)+10)/120f*w,(maxUpLine+1f)*h/9f);
@@ -260,9 +260,14 @@ public class Course {
             if (s.substring(0,6).equalsIgnoreCase("Prereq")){
                 prs=s.substring(14);
             }
+            for (int i=0; i<exclude.length()/3; i++){
+                String nm1=exclude.substring(i*3,i*3+3);
+                System.out.println(nm1);
+                s=s.replaceAll(nm1,"");
+            }
+            //if (s.contains(""))
         }
         this.prs=prs;
-        //System.out.println(prs);
     }
 
     private ArrayList<String> getStatements(String s){
@@ -287,6 +292,7 @@ public class Course {
         int j=0;
         if (req1[i].size()>0) {
             for (Course c : req1[i]) {
+
                 req[j] = c.index;
                 j++;
             }

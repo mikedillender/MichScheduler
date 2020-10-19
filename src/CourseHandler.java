@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CourseHandler {
+public class CourseHandler implements Constants {
     ArrayList<Course> courses;
     ArrayList<Course>[] reqby;
     ArrayList<Course>[] req;
@@ -13,18 +13,6 @@ public class CourseHandler {
 
     public CourseHandler(ArrayList<Course> courses,int w, int h){
         this.courses=courses;
-        /*int[] reqby=new int[courses.size()];
-        for (int i=0; i<courses.size();i++){
-            for (Course c:courses){
-                if (c.isRelated(courses.get(i).name)){
-                    reqby[i]++;
-                }
-            }
-        }
-        for (int i=0; i<reqby.length; i++){
-            if (reqby[i]==0){continue;}
-            System.out.println(courses.get(i).name+" - "+reqby[i]);
-        }*/
         ArrayList<Integer> noreq=new ArrayList<>();
         for (int i=0; i<courses.size(); i++){
             if (courses.get(i).prs.contains("None")||courses.get(i).prs.contains("none")){
@@ -66,7 +54,7 @@ public class CourseHandler {
         rendering=new ArrayList<>();
 
         for (Course c: courses){
-            if (c.maxUpLine!=0||c.maxDownLine!=0){
+            if ((c.maxUpLine!=0||c.maxDownLine!=0)&&!exclude.contains(Integer.toString(c.code))){
                 rendering.add(c);
             }
         }
@@ -105,7 +93,8 @@ public class CourseHandler {
 
 
     public void addPigments(){
-        spreadFrom(getCofCode(430),230,20,215,1,new ArrayList<Course>());
+        //spreadFrom(getCofCode(430),230,20,215,1,new ArrayList<Course>());
+        spreadFrom(getCofCode(230),230,20,215,1,new ArrayList<Course>());
         spreadFrom(getCofCode(281),150,150,245,1,new ArrayList<Course>());
         spreadFrom(getCofCode(270),230,80,60,1,new ArrayList<Course>());
         spreadFrom(getCofCode(691),230,80,60,2,new ArrayList<Course>());
@@ -138,12 +127,13 @@ public class CourseHandler {
     }
 
     public void spreadFrom(Course c, int r, int g, int b, int i, ArrayList<Course> prev){
+        if(exclude.contains(Integer.toString(c.code))){return;}
         if (c==null){return;}
         int[] pigs=new int[]{r,g,b,i};
         c.pigments.add(pigs);
         prev.add(c);
         ArrayList<Integer> connected=new ArrayList<>();
-        for (int in:c.reqby){connected.add(in);}
+        for (int in:c.reqby){ connected.add(in);}
         for (int in:c.req){connected.add(in);}
         for (int cin:connected){
             if (prev.contains(courses.get(cin))){continue;}
