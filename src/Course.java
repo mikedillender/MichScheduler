@@ -307,4 +307,20 @@ public class Course implements Constants {
         numlinked=reqby.length+req.length;
 
     }
+
+    public ArrayList<String> getDesc(){
+        int maxl=70;
+        ArrayList<String> ls=new ArrayList<>();
+        for (String s:lines){
+            if (s.length()<maxl){
+                ls.add(s);
+            }else {
+                for (int i=0;i<s.length();i+=maxl){
+                    int l=(i+maxl<s.length())?i+maxl:s.length();
+                    ls.add(s.substring(i,l));
+                }
+            }
+        }
+        return ls;
+    }
 }

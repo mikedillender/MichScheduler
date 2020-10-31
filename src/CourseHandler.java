@@ -173,4 +173,18 @@ public class CourseHandler implements Constants {
     public ArrayList<Course> getCourses() {
         return courses;
     }
+
+    public Course getCourseAt(int x, int y){
+        Course closest=null;
+        float dist=100000;
+        for (Course c:courses){
+            if (c.p==null){continue;}
+            float d=(float)(Math.pow(c.p.x-x,2)+Math.pow(c.p.y-y,2));
+            if (d<dist){
+                dist=d;
+                closest=c;
+            }
+        }
+        return closest;
+    }
 }

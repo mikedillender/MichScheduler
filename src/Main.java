@@ -3,13 +3,15 @@ import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Main extends Applet implements Runnable, KeyListener {
+public class Main extends Applet implements Runnable, KeyListener, MouseListener {
 
     //BASIC VARIABLES
     private final int WIDTH=1800, HEIGHT=900;
@@ -27,7 +29,8 @@ public class Main extends Applet implements Runnable, KeyListener {
     boolean locky=true;
     CourseHandler ch;
     float speed=.02f;
-    boolean updating=false;
+    boolean updating=true;
+    Course clicked=null;
 
     public void init(){//STARTS THE PROGRAM
         this.resize(WIDTH, HEIGHT);
@@ -36,6 +39,11 @@ public class Main extends Applet implements Runnable, KeyListener {
         gfx=img.getGraphics();
         DataProcessor dp=new DataProcessor();
         ch=new CourseHandler(dp.courses, WIDTH, HEIGHT);
+
+        for (int i=0;i<100;i++){
+            ch.update(.5f, repel, locky);
+        }
+        addMouseListener(this);
         thread=new Thread(this);
         thread.start();
     }
@@ -46,10 +54,19 @@ public class Main extends Applet implements Runnable, KeyListener {
         gfx.fillRect(0,0,WIDTH,HEIGHT);//background size
         gfx.setColor(Color.BLACK);
         gfx.drawString("r="+repel,50,30);
-        gfx.drawString("s="+speed,50,50);
+        gfx.drawString("s="+((int)(speed*1000)/1000f),50,50);
         gfx.drawString("ly="+locky,50,70);
         ch.draw(gfx,WIDTH,HEIGHT);
-
+        if (clicked!=null) {
+            gfx.setFont(gfx.getFont().deriveFont(20f));
+            int x1=120;
+            int y1=30;
+            for (String s:clicked.getDesc()){
+                gfx.drawString(s,x1,y1);
+                y1+=24;
+            }
+            gfx.setFont(gfx.getFont().deriveFont(12f));
+        }
 
         //RENDER FOREGROUND
 
@@ -119,4 +136,29 @@ public class Main extends Applet implements Runnable, KeyListener {
         return bimage;
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        //System.out.println(e.getX()+", "+e.getY());
+        clicked=ch.getCourseAt(e.getX(),e.getY());
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }
